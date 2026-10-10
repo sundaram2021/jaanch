@@ -1,4 +1,7 @@
 import { extractDomain } from "../helpers/formatters";
+import { cleanHtmlEntities } from "./html-entities";
+
+export { cleanHtmlEntities };
 
 export interface ExtractedArticle {
   url: string;
@@ -33,15 +36,7 @@ function extractMetaTag(html: string, name: string): string | undefined {
   return undefined;
 }
 
-function cleanHtmlEntities(str: string): string {
-  return str
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ");
-}
+
 
 export async function extractArticleContent(
   url: string
