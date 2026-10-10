@@ -1,0 +1,36 @@
+lib/agent/investigation-agent.ts
+  s_974663a78a09a1::t_74fa7945b82a49 2,148
+  s_974663a78a09a1::t_0f6e5137e6db2c 75,124
+AGENTS.md
+  s_974663a78a09a1::t_819b0d6bc63d3f 72-73
+  s_974663a78a09a1::t_bae392b915a42d 79-82,84-86
+  s_974663a78a09a1::t_16d131aa8b058f 40,56-57
+README.md
+  s_974663a78a09a1::t_da075e0eb5f55c 8,34-35,39-40
+  s_974663a78a09a1::t_be994ac211f717 82
+  s_974663a78a09a1::t_5f5177647058a8 104
+package.json
+  s_974663a78a09a1::t_9d31ee53402756 12
+lib/agent/anthropic-client.ts
+  s_974663a78a09a1::t_58cad5445dd5b4 1-18
+.env.example
+  s_974663a78a09a1::t_e5a6abf7037603 1,5,8
+bun.lock
+  s_974663a78a09a1::t_f43d47bfecdebe 8,34,36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a1f9c7722b3003356304f1abc0980e0898921a93",
+  "prompts": {},
+  "sessions": {
+    "s_974663a78a09a1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ed9a9a08cffe4PvIAzjAru02mE",
+        "model": "unknown"
+      },
+      "human_author": "Sundaram Kumar Jha <jhasundaram@outlook.com>"
+    }
+  }
+}
