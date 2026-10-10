@@ -37,7 +37,7 @@ Jaanch is an autonomous AI investigation tool. The user pastes an article URL. T
       | 1. Validate URL with Zod
       | 2. Extract article text (article-extractor.ts)
       | 3. Run investigation agent (investigation-agent.ts)
-      |    - Agent uses Vercel AI Gateway (meta/muse-spark-1.3-contributor)
+      |    - Agent uses Anthropic (claude-haiku-5-5 via anthropic-client.ts)
       |    - Agent calls SerpAPI tool for each claim
       |    - Agent returns structured JSON (report-schema.ts)
       | 4. Return InvestigationReport JSON
@@ -53,8 +53,8 @@ Jaanch is an autonomous AI investigation tool. The user pastes an article URL. T
 
 | Variable | Purpose |
 |---|---|
-| `AI_API_KEY` | API key for Vercel AI Gateway (fallback: `VERCEL_AI_API_KEY`) |
-| `AI_MODEL_NAME` | Model identifier (fallback: `VERCEL_AI_GATEWAY_MODEL_NAME`, currently `meta/muse-spark-1.3-contributor`) |
+| `AI_API_KEY` | API key for Anthropic |
+| `AI_MODEL_NAME` | Model identifier (currently `claude-haiku-5-5`) |
 | `SERPAPI_KEY` | API key for SerpAPI (Google search) |
 
 ### Agent Behavior
@@ -69,13 +69,18 @@ The investigation agent (`lib/agent/investigation-agent.ts`):
 ### Resilience Patterns
 
 - `AbortSignal.timeout` on all external fetch calls (article extraction, SerpAPI).
+- `assertModelConfigured()` fails fast with an actionable message when `AI_API_KEY` is unset.
+- `maxOutputTokens` caps each model call (2000 claim extraction, 500 claim evaluation).
 - Suspense boundary around dynamic `searchParams` usage in report page.
 - Graceful error states in `use-investigation.ts` with user-facing messages.
 
 ### Test Verification
 
-Two real articles were tested end-to-end:
-- BBC: `https://www.bbc.com/news/articles/c4gz69j7eero` -- 200 OK, 2 claims verified.
-- The Verge: `https://www.theverge.com/news/619890/openai-gpt-5-orion-preview-launch` -- 200 OK, 2 claims verified.
+Articles tested end-to-end against `claude-haiku-5-5`:
+- `https://en.wikipedia.org/wiki/Five_elements` -- 4 claims, 3 supported / 1 needs context, 8.0s.
+- `https://en.wikipedia.org/wiki/Photosynthesis` -- 4 claims, 3 supported / 1 needs context.
+- `https://en.wikipedia.org/wiki/Mitochondrion` via `POST /api/investigate` -- 200 OK, 4 claims, 5,816-char markdown.
 
-Both produced correct structured reports with citations and markdown dossiers.
+Note: `temperature` is not supported by `claude-haiku-5-5` and must not be passed to `generateText`.
+
+Article URLs rot. A 404 from the extractor returns HTTP 404 with a clear message rather than failing the pipeline.

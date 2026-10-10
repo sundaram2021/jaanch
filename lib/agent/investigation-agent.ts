@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { defaultModel, assertGatewayConfigured } from "./gateway";
+import { defaultModel, assertModelConfigured } from "./anthropic-client";
 import { searchSerpApi } from "./serpapi-tool";
 import { extractArticleContent } from "./article-extractor";
 import { generateReportMarkdown } from "../helpers/markdown-helper";
@@ -72,7 +72,7 @@ Return a valid JSON array of objects with this exact structure:
   const { text: responseText } = await generateText({
     model: defaultModel,
     prompt,
-    temperature: 0.1,
+    maxOutputTokens: 2000,
   });
 
   const parsed = parseJsonFromLlm(responseText);
@@ -121,7 +121,7 @@ Return JSON object:
     const { text: evalText } = await generateText({
       model: defaultModel,
       prompt,
-      temperature: 0.1,
+      maxOutputTokens: 500,
     });
 
     const parsed = parseJsonFromLlm(evalText);
@@ -145,7 +145,7 @@ Return JSON object:
 }
 
 export async function runInvestigation(url: string): Promise<InvestigationReport> {
-  assertGatewayConfigured();
+  assertModelConfigured();
 
   const article = await extractArticleContent(url);
   const rawClaims = await extractClaims(article.title, article.domain, article.text);

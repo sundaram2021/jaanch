@@ -5,7 +5,7 @@ A source-backed AI investigation tool that checks article claims. Paste a link, 
 ## Stack
 
 - **Framework**: Next.js 16 (App Router) with Bun
-- **AI Model**: Vercel AI Gateway (`meta/muse-spark-1.3-contributor`)
+- **AI Model**: Anthropic (`claude-haiku-5-5` via `@ai-sdk/anthropic`)
 - **Search Engine**: SerpAPI (Google search for independent source corroboration)
 - **Validation**: Zod schemas for all agent inputs, outputs, claims, and reports
 - **Styling**: Tailwind CSS v4
@@ -31,13 +31,13 @@ cp .env.example .env.local
 `.env.local` holds:
 
 ```
-AI_API_KEY=your_vercel_ai_gateway_key
-AI_MODEL_NAME='meta/muse-spark-1.3-contributor'
+AI_API_KEY=your_anthropic_api_key
+AI_MODEL_NAME='claude-haiku-5-5'
 SERPAPI_KEY=your_serpapi_key
 ```
 
-`VERCEL_AI_API_KEY` and `VERCEL_AI_GATEWAY_MODEL_NAME` are still accepted as
-deprecated fallbacks.
+Set a monthly spend limit under Anthropic Console -> Settings -> Billing to cap
+API cost.
 
 ## How It Works
 
@@ -79,7 +79,7 @@ Claims Breakdown:
 Markdown dossier: 2,324 characters generated.
 ```
 
-A second test against `https://www.theverge.com/news/619890/openai-gpt-5-orion-preview-launch` also returned `200 OK` with 2 claims verified and a 2,560-character markdown report.
+A second test against `https://en.wikipedia.org/wiki/Mitochondrion` returned `200 OK` with 4 claims and a 5,816-character markdown report.
 
 ## Project Structure
 
@@ -101,6 +101,6 @@ hooks/
 
 lib/
   schemas/                    — Zod schemas (claim, report, serpapi)
-  agent/                      — Gateway config, article extractor, SerpAPI tool, investigation agent
+  agent/                      — Anthropic client, article extractor, SerpAPI tool, investigation agent
   helpers/                    — Formatters, markdown generator, sample data
 ```
