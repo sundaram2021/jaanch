@@ -31,10 +31,13 @@ cp .env.example .env.local
 `.env.local` holds:
 
 ```
-VERCEL_AI_API_KEY=your_vercel_ai_gateway_key
-VERCEL_AI_GATEWAY_MODEL_NAME='meta/muse-spark-1.3-contributor'
+AI_API_KEY=your_vercel_ai_gateway_key
+AI_MODEL_NAME='meta/muse-spark-1.3-contributor'
 SERPAPI_KEY=your_serpapi_key
 ```
+
+`VERCEL_AI_API_KEY` and `VERCEL_AI_GATEWAY_MODEL_NAME` are still accepted as
+deprecated fallbacks.
 
 ## How It Works
 

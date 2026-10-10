@@ -53,8 +53,8 @@ Jaanch is an autonomous AI investigation tool. The user pastes an article URL. T
 
 | Variable | Purpose |
 |---|---|
-| `VERCEL_AI_API_KEY` | API key for Vercel AI Gateway |
-| `VERCEL_AI_GATEWAY_MODEL_NAME` | Model identifier (currently `meta/muse-spark-1.3-contributor`) |
+| `AI_API_KEY` | API key for Vercel AI Gateway (fallback: `VERCEL_AI_API_KEY`) |
+| `AI_MODEL_NAME` | Model identifier (fallback: `VERCEL_AI_GATEWAY_MODEL_NAME`, currently `meta/muse-spark-1.3-contributor`) |
 | `SERPAPI_KEY` | API key for SerpAPI (Google search) |
 
 ### Agent Behavior

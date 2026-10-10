@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { defaultModel } from "./gateway";
+import { defaultModel, assertGatewayConfigured } from "./gateway";
 import { searchSerpApi } from "./serpapi-tool";
 import { extractArticleContent } from "./article-extractor";
 import { generateReportMarkdown } from "../helpers/markdown-helper";
@@ -145,6 +145,8 @@ Return JSON object:
 }
 
 export async function runInvestigation(url: string): Promise<InvestigationReport> {
+  assertGatewayConfigured();
+
   const article = await extractArticleContent(url);
   const rawClaims = await extractClaims(article.title, article.domain, article.text);
 
