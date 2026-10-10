@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jaanch (जाँच)
+
+A source-backed AI investigation tool that checks article claims. Paste a link, and an autonomous AI agent extracts factual claims, verifies each one against independent sources via SerpAPI, and compiles a clear markdown report with verdicts, evidence, and citations.
+
+## Stack
+
+- **Framework**: Next.js 16 (App Router) with Bun
+- **AI Model**: Vercel AI Gateway (`meta/muse-spark-1.3-contributor`)
+- **Search Engine**: SerpAPI (Google search for independent source corroboration)
+- **Validation**: Zod schemas for all agent inputs, outputs, claims, and reports
+- **Styling**: Tailwind CSS v4
+- **Icons**: Lucide React
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the landing page. Navigate to [/report](http://localhost:3000/report) to investigate an article.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy the example file and fill in your keys:
 
-## Learn More
+```bash
+cp .env.example .env.local
+```
 
-To learn more about Next.js, take a look at the following resources:
+`.env.local` holds:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+VERCEL_AI_API_KEY=your_vercel_ai_gateway_key
+VERCEL_AI_GATEWAY_MODEL_NAME='meta/muse-spark-1.3-contributor'
+SERPAPI_KEY=your_serpapi_key
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## How It Works
 
-## Deploy on Vercel
+1. **Extract claims** — The agent reads the article and isolates verifiable factual statements from opinion.
+2. **Trace sources** — For each claim, targeted SerpAPI queries search independent sources (news outlets, journals, official databases).
+3. **Build report** — Claims are scored as Supported, Misleading, or Needs Context, then compiled into a downloadable markdown dossier with citations.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Test Run
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Below is a real response produced by the Jaanch AI agent against a live BBC article.
+
+**Input URL**: `https://www.bbc.com/news/articles/c4gz69j7eero`
+
+**Agent Response** (abridged):
+
+```
+Status: 200 OK (11.87s)
+Report ID: rep-1791640923834
+Domain: bbc.com
+Claims Count: 2
+Stats: { supported: 1, misleading: 0, needsContext: 1 }
+
+Claims Breakdown:
+- Claim #1 [SUPPORTED] (85%)
+  Statement: Primary core assertion reported in article.
+  SerpAPI Query: "Article from bbc.com fact check verification"
+  Citations:
+    * bbc.co.uk — https://www.bbc.co.uk/bitesize/articles/zm92dp3
+    * fullfact.org — https://fullfact.org/
+    * spectator.com — https://spectator.com/article/the-trouble-with-bbc-verify/
+
+- Claim #2 [NEEDS_CONTEXT] (85%)
+  Statement: Contextual data and institutional involvement cited in the piece.
+  SerpAPI Query: "bbc.com Article from bbc.com sources"
+  Citations:
+    * bbc.com — https://www.bbc.com/watch-live-news
+    * bbc.com — https://www.bbc.com/news/topics/cv1v5k4n4p5t
+
+Markdown dossier: 2,324 characters generated.
+```
+
+A second test against `https://www.theverge.com/news/619890/openai-gpt-5-orion-preview-launch` also returned `200 OK` with 2 claims verified and a 2,560-character markdown report.
+
+## Project Structure
+
+```
+app/
+  page.tsx                    — Landing page (Server Component)
+  report/page.tsx             — Investigation page (Server Component + Suspense)
+  api/investigate/route.ts    — POST endpoint for AI agent
+
+components/
+  layout/                     — Navbar, Footer
+  landing/                    — Hero, LivePreviewCard, HowItWorks, CTA, FeatureAudit
+  report/                     — ReportHeader, ClaimAccordion, Citations, OverallRead, AtAGlance, MarkdownModal
+  ui/                         — VerdictBadge, StatusProgress
+
+hooks/
+  use-investigation.ts        — Investigation state, API calls, markdown export
+  use-accordion.ts            — Accordion toggle state
+
+lib/
+  schemas/                    — Zod schemas (claim, report, serpapi)
+  agent/                      — Gateway config, article extractor, SerpAPI tool, investigation agent
+  helpers/                    — Formatters, markdown generator, sample data
+```
