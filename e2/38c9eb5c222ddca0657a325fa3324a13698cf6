@@ -1,0 +1,27 @@
+lib/agent/investigation-agent.ts
+  s_974663a78a09a1::t_27611c23f1adce 148-149
+  s_974663a78a09a1::t_5c21ff9271edd9 2
+lib/agent/gateway.ts
+  s_974663a78a09a1::t_b2f21d026eecab 3,5-8,17-24
+README.md
+  s_974663a78a09a1::t_d821d114efecd0 34-35,39-40
+  s_974663a78a09a1::t_4c5c62e01a03d9 41
+AGENTS.md
+  s_974663a78a09a1::t_308144bab25d53 56-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e238c9eb5c222ddca0657a325fa3324a13698cf6",
+  "prompts": {},
+  "sessions": {
+    "s_974663a78a09a1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ed9a9a08cffe4PvIAzjAru02mE",
+        "model": "unknown"
+      },
+      "human_author": "Sundaram Kumar Jha <jhasundaram@outlook.com>"
+    }
+  }
+}
